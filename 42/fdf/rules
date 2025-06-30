@@ -1,0 +1,64 @@
+Program name 			fdf
+Turn in files 			Makefile, *.h, *.c
+Makefile 				NAME, all, clean, fclean, re
+Arguments 				A file in format *.fdf
+External functs.
+						• 	open, close, read, write,
+							malloc, free, perror,
+							strerror, exit
+						• 	All functions of the math library 
+							(-lm compiler option, man man 3 math)
+						• 	All functions of the MiniLibX
+						• 	ft_printf and any equivalent YOU coded
+Libft authorized 		Yes
+Description 			This project is about creating a simple wireframe
+						model of a landscape.
+
+
+
+
+Executing your fdf program using the example file 42.fdf:
+$>./fdf 42.fdf
+$>
+
+$>cat 42.fdf
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+0  0 10 10  0  0 10 10  0  0  0 10 10 10 10 10  0  0  0
+0  0 10 10  0  0 10 10  0  0  0  0  0  0  0 10 10  0  0
+0  0 10 10  0  0 10 10  0  0  0  0  0  0  0 10 10  0  0
+0  0 10 10 10 10 10 10  0  0  0  0 10 10 10 10  0  0  0
+0  0  0 10 10 10 10 10  0  0  0 10 10  0  0  0  0  0  0
+0  0  0  0  0  0 10 10  0  0  0 10 10  0  0  0  0  0  0
+0  0  0  0  0  0 10 10  0  0  0 10 10 10 10 10 10  0  0
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+$>
+
+test file without graphic program
+$>cat test_file.fdf
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+0  0  2  2  0  0  1  1  0  0  0  1  1  1  1  1  0  0  0
+0  0  2  3  0  0  2  1  0  0  0  0  0  0  0  1  4  0  0
+0  0  3  4  0  0  2  1  0  0  0  0  0  0  0  3  4  0  0
+0  0  3  4  4  4  3  2  0  0  0  0  1  2  2  2  0  0  0
+0  0  0  3  3  3  3  2  0  0  0  1  3  0  0  0  0  0  0
+0  0  0  0  0  0  2  2  0  0  0  1  3  0  0  0  0  0  0
+0  0  0  0  0  0  1  1  0  0  0  1  3  4  4  4  3  0  0
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+
+                                                       
+                                                       
+      o  o        .  .           .  .  .  .  .         
+      o  x        o  .                       .  X      
+      x  X        o  .                       x  X      
+      x  X  X  X  x  o              .  o  o  o         
+         x  x  x  x  o           .  x                  
+                  o  o           .  x                  
+                  .  .           .  x  X  X  X  x      
+                                                       
+$>
+
+.oxX

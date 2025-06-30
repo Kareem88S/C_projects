@@ -1,0 +1,109 @@
+BIN_NAME = push_swap
+
+# Compiler, Includes, and flags
+CC = gcc
+INCLUDES = -I $(HEADER_FILES_DIR)
+DEBUG_FLAG = -g3
+CFLAGS = -Wall -Wextra -Werror $(INCLUDES) $(DEBUG_FLAG)
+
+# Directories
+OBJECT_DIR = object_files
+SOURCE_DIRS = \
+	$(HEADER_FILES_DIR) $(MISC) $(MOVE_OPERATIONS_DIR) \
+	$(PREPARATORY_FILES_DIR) $(SORTING_ALGORITHMS_DIR) \
+	$(UPDATE_DIR) .
+
+HEADER_FILES_DIR = 			header_files
+PREPARATORY_FILES_DIR = 	src_1_preparations
+UPDATE_DIR = 				src_2_update_data
+MOVE_OPERATIONS_DIR = 		src_3_move_operations
+SORTING_ALGORITHMS_DIR = 	src_4_sorting_algos
+MISC_DIR = 					src_5_misc
+
+# Source files
+SOURCE_FILES = \
+	$(PREPARATORY_FILES) $(SORTING_ALGORITHMS) $(UPDATE_DATA) \
+	$(ROOT_SOURCES) $(MISC) $(MOVE_OPERATIONS)
+ROOT_SOURCES = main.c
+PREPARATORY_FILES = \
+	$(PREPARATORY_FILES_DIR)/1_preset_controller.c \
+	$(PREPARATORY_FILES_DIR)/2_validate_and_record_input.c \
+	$(PREPARATORY_FILES_DIR)/3_create_main_stack_and_convert_input.c \
+	$(PREPARATORY_FILES_DIR)/4_populate_nodes_with_start_data.c \
+	$(PREPARATORY_FILES_DIR)/5_create_linked_list_array.c
+# $(PREPARATORY_FILES_DIR)/5_set_remaining_tcon_data.c 		oud en weg?
+UPDATE_DATA = \
+	$(UPDATE_DIR)/1_update_stack_nodes.c \
+	$(UPDATE_DIR)/2_update_tcon.c \
+	$(UPDATE_DIR)/3_update_tcon_utils_off_and_buckets.c \
+	$(UPDATE_DIR)/4_update_tcon_utils_lss.c \
+	$(UPDATE_DIR)/6_update_leader_scores_global.c
+# $(UPDATE_DIR)/5_update_best_mv.c
+# $(UPDATE_DIR)/5_update_distance_to_target.c
+MOVE_OPERATIONS = \
+	$(MOVE_OPERATIONS_DIR)/1_push_operation.c \
+	$(MOVE_OPERATIONS_DIR)/2_swap_operation.c \
+	$(MOVE_OPERATIONS_DIR)/3_rotate_operation.c \
+	$(MOVE_OPERATIONS_DIR)/4_print_operation.c
+SORTING_ALGORITHMS = \
+	$(SORTING_ALGORITHMS_DIR)/1_sorting_manager.c \
+	$(SORTING_ALGORITHMS_DIR)/2_mini_sort_base_case.c \
+	$(SORTING_ALGORITHMS_DIR)/3_three_elements_sorter.c \
+	$(SORTING_ALGORITHMS_DIR)/4_four_elements_sorter.c \
+	$(SORTING_ALGORITHMS_DIR)/5_five_elements_sorter.c \
+	$(SORTING_ALGORITHMS_DIR)/6_reverse_sort.c \
+	$(SORTING_ALGORITHMS_DIR)/7_insertion_sort.c \
+	$(SORTING_ALGORITHMS_DIR)/8_quick_sort.c 
+# 	$(SORTING_ALGORITHMS_DIR)/basic_sort.c
+# 	$(SORTING_ALGORITHMS_DIR)/tiny_sort.c
+MISC = \
+	$(MISC_DIR)/free_all.c \
+	$(MISC_DIR)/utils.c
+
+
+# Convert .c files to .o files with corresponding directories in OBJ_DIR
+OBJECT_FILES = $(patsubst %.c, $(OBJECT_DIR)/%.o, $(SOURCE_FILES))
+#			patsubst :
+#			$(patsubst pattern,replacement,text)
+#			pattern → The pattern to match (e.g., %.c).
+#			replacement → What to replace the pattern with (e.g., %.o).
+#			text → The list of words (filenames) where the pattern is applied.
+OBJECT_DIRS = $(sort $(dir $(OBJECT_FILES)))
+#			dir function and sort function:
+#			dir → extracts only the directory portion of each file in the list.
+#			sort → removes duplicates and sorts alphabetically.
+
+#	.PHONY indicates phony targets -- just in case a file named clean(.c) would exist in this directory
+.PHONY : all clean fclean re
+
+all: $(BIN_NAME)
+
+# $(BIN_NAME) :
+# 	@echo "Building $@"
+
+$(BIN_NAME) : $(OBJECT_FILES)
+	$(CC) $(CFLAGS) $(OBJECT_FILES) -o $(BIN_NAME)
+
+$(OBJECT_FILES): | $(OBJECT_DIRS)
+#			$|: == order-only prerequisite
+#			Now object files will not be (re)build if they already exist.
+
+$(OBJECT_DIRS):
+	mkdir -p $@
+#			-p flag ensures it is only built if dir does not yet exist
+
+$(OBJECT_DIR)/%.o: %.c
+	@echo "Building $@" 
+	$(CC) $(CFLAGS) -c -o $@ $<
+# -c doesn't link, compiles
+# -o names
+# $@ current target
+
+clean :  
+	rm -rf $(OBJECT_FILES) $(OBJECT_DIR)
+#	@rm -rf $(OBJECT_FILES) $(OBJECT_DIRS) @ == silencer. Command is executed, but commandline doesnt print
+
+fclean: clean
+	rm -f $(BIN_NAME)
+
+re: fclean all
