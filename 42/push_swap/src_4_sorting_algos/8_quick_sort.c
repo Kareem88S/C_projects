@@ -15,6 +15,7 @@
 int			quick_sort(t_ctr *tcon, t_stack_status *s);
 static void	distributor(t_ctr *tcon, t_stack_status *s);
 static void	sort_sections(t_ctr *tcon, t_stack_status *s);
+static void	check_cheaper_distribution(t_stack_status *s);
 
 /*
 First sets meta-data for proper decision-making in the meta struct.
@@ -30,6 +31,11 @@ Once all are distributed, the RR'd foundational elements are returned.
 	- 3) the stack is large, and the cheapest way is to RRR the elements back.
 Then both are sorted (managed by another function). Once this has succesfully
 	finished, the pushed "roof" elements are returned, and the stack is sorted.
+*/
+
+/*
+First the distributor-function is called: here the stack is split into above-
+	pivot and below-pivot.
 */
 int	quick_sort(t_ctr *tcon, t_stack_status *s)
 {
@@ -71,22 +77,63 @@ static void	sort_sections(t_ctr *tcon, t_stack_status *s)
 	}
 }
 
+/*
+First checks if the working-stack is empty other than the working sortables:
+	check if cheaper than standard disro is possible.
+
+*/
 static void	distributor(t_ctr *tcon, t_stack_status *s)
 {
-	t_stack const	st = s->stack;
-	int				i;
-	t_n *const		*cur_node;
+	int			i;
+	t_n *const	*cur_node;
+
+	i = -1;
+	if (s->or_is_sub_stack == 0)
+		check_cheaper_distribution(s);
 
 	i = -1;
 	while (++i < s->stack_size)
 	{
 		cur_node = s->or;
-		if (((st == STACK_A)
+		if (((s->stack == STACK_A)
 				&& ((*cur_node)->n_stats.relative_value >= s->pivot_point))
-			|| ((st == STACK_B)
+			|| ((s->stack == STACK_B)
 				&& ((*cur_node)->n_stats.relative_value < s->pivot_point)))
 			s->rotated += moving(tcon, s->stack, RR);
 		else
 			s->pushed += moving(tcon, s->stack, ANY_PUSH);
+	}
+}
+
+
+static void	check_cheaper_distribution(t_stack_status *s)
+{
+	int	i;
+	int	bottoms_in_upper_half;
+	int	bottoms_in_lower_half;
+	int bottoms_away_from_bottom;
+	int bottoms_away_from_top;
+
+	bottoms_away_from_bottom = 0;
+	bottoms_away_from_top = 0;
+	bottoms_in_lower_half = 0;
+	bottoms_in_upper_half = 0;
+	i = -1;
+	while (++i < s->pivot_point)
+	{
+		if ((s->stack == STACK_A && s->norm_arr[i] > s->pivot_point)
+			|| (s->stack == STACK_B && s->norm_rev[i] < s->pivot_point))
+			bottoms_in_upper_half++;
+		else if (i == bottoms_away_from_top)
+			bottoms_away_from_top++;
+	}
+	i = s->stack_size;
+	while (--i > s->pivot_point)
+	{
+		if ((s->stack == STACK_A && s->norm_arr[i] > s->pivot_point)
+			|| (s->stack == STACK_B && s->norm_rev[i] < s->pivot_point))
+			bottoms_in_lower_half++;
+		else if (i == bottoms_away_from_top)
+			bottoms_away_from_bottom++;
 	}
 }

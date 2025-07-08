@@ -16,9 +16,30 @@ int			sorting_manager(t_ctr *tcon, t_n *const *top_orig,
 				int cur_stack_size, int *dont_push);
 static int	sorting_algos(t_ctr *tcon, t_stack_status *stats);
 
-
-
-
+/*
+Sorting_manager
+Function selects and delegates to an appropriate sorting algorithm depending on
+	the current stack size, the level of sortedness, and active stack (A or B).
+Parameters:
+ - tcon:        	Pointer to the global controller struct.
+ - top_orig:    	Pointer to the pointer of the top node in the current stack.
+                	Used to determine stack identity, contents, and ordering.
+ - cur_stack_size:	Number of elements to consider for sorting in the current 
+ 					stack context. This may be less than the full stack.
+ - dont_push:   	Pointer to an int used by recursive algorithms (like quicksort)
+					or small-sorters to *tell this layer* how many elements to leave
+ 					untouched (not pushed). 
+					For example, quicksort may sort a portion, but wants `n` 
+					elements left in place for later merging or safety.
+ 					If NULL, all elements are eligible for sorting.
+Returns:
+ - SORTED (usually a macro for 0) on success.
+ - INVALID if the state cannot be evaluated (e.g., bad data or memory).
+ Notes:
+ - Internally allocates and frees sorting statistics (`t_stack_status`).
+ - Decides on the algorithm by checking "percent sorted" fields and
+	sortedness tolerances (off-by-1, off-by-2, etc).
+ */
 int	sorting_manager(t_ctr *tcon, t_n *const *top_orig,
 				int cur_stack_size, int *dont_push)
 {
@@ -62,25 +83,35 @@ static int	sorting_algos(t_ctr *tcon, t_stack_status *stats)
 		|| (stats->stack == STACK_B
 			&& stats->perc_sorted_off_by_max_2_rev >= 100))
 		return (reverse_sort(tcon, stats));
-	if (stats->stack_size < 80 && ((stats->perc_sorted_off_by_max_2_rev >= 85
-			&& stats->stack == STACK_A) || (stats->stack == STACK_B 
-				&& stats->perc_sorted_off_by_max_2_rev >= 85)))
-		return (reverse_sort(tcon, stats));
+	// if (stats->stack_size < 80 && ((stats->perc_sorted_off_by_max_2_rev >= 85
+	// 		&& stats->stack == STACK_A) || (stats->stack == STACK_B 
+	// 			&& stats->perc_sorted_off_by_max_2_rev >= 85)))
+	// 	return (reverse_sort(tcon, stats));
 	
 
 
-	// 	if ((stats->stack == STACK_A && stats->perc_sorted_off_by_max_2 >= 100)
-	// 	|| (stats->stack == STACK_B
-	// 		&& stats->perc_sorted_off_by_max_2 >= 100))
-	// 	// return (reverse_sort(tcon, stats));		// max 2 off -- uitzoeken welke fn naam
-	// 	// // return (max_two_off(tcon, stats));
+		if ((stats->stack == STACK_A && stats->perc_sorted_off_by_max_2 >= 100)
+			|| (stats->stack == STACK_B
+				&& stats->perc_sorted_off_by_max_2 >= 100))
+		return (reverse_sort(tcon, stats));		// max 2 off -- uitzoeken welke fn naam
+		// 	// // return (max_two_off(tcon, stats));
+	
+	if ((stats->perc_sorted_off_by_max_2 >= 100 && stats->stack == STACK_A)
+			|| (stats->perc_sorted_off_by_max_2 >= 100
+				&& stats->stack == STACK_B))
+		return (max_two_off(tcon, stats));
+		
+		
+		// return (reverse_sort(tcon, stats));
+		// // return (insertion_max_two_off(tcon, stats));
+
+
 	// if (((stats->perc_sorted_off_by_max_2 >= 85 && stats->stack == STACK_A)
 	// 		|| (stats->perc_sorted_off_by_max_2
 	// 			&& stats->stack == STACK_B >= 85)) && stats->stack_size < 80)
 	// 	// return (reverse_sort(tcon, stats));
 	// 	// // return (insertion_max_two_off(tcon, stats));
 
-	if (stats->stack_size)
-		return (quick_sort(tcon, stats));
-	return (SORTED);
+
+	return (quick_sort(tcon, stats));
 }

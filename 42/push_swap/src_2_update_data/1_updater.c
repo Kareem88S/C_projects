@@ -6,7 +6,7 @@
 /*   By: kasherif <kasherif@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 11:45:07 by kasherif          #+#    #+#             */
-/*   Updated: 2025/06/30 13:40:11 by kasherif         ###   ########.fr       */
+/*   Updated: 2025/07/08 10:25:49 by kasherif         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@
 void		update_meta(t_stack_status *s);
 
 // updater_helper_2.c
-void		get_outliers(t_stack_status *s);
+// void		get_outliers(t_stack_status *s);
 
 // this file
 int			update_global_state(t_ctr *tcon);
 int			update_sub_state(t_stack_status *stats);
 static int	build_section_arrays(t_stack_status *section, t_n *node, int size);
 static void	update_nodes(t_stack_status *s);
-static void	get_off_by_position(t_stack_status *s);
+// static void	get_off_by_position(t_stack_status *s);
 
 int	update_global_state(t_ctr *tcon)
 {
@@ -117,7 +117,7 @@ static void	update_nodes(t_stack_status *s)
 	int	rel_val;
 	int	rel_rev;
 
-	n = *(s->or);
+	n = (*s->or);
 	index = -1;
 	while (++index < s->stack_size)
 	{
@@ -127,6 +127,8 @@ static void	update_nodes(t_stack_status *s)
 		n->n_stats.pos_in_stack = index;
 		n->n_stats.relative_value = rel_val;
 		n->n_stats.relative_value_rev = rel_rev;
+		n->n_stats.off_by = index - rel_val;
+		n->n_stats.off_by_rev = index - rel_rev;
 		n->n_stats.belongs_in_quarter = (rel_val * QUARTS) / s->stack_size;
 		n->n_stats.belongs_in_quarter_rev = (rel_rev * QUARTS) / s->stack_size;
 		n->n_stats.belongs_in_tenth = (rel_val * TENTHS) / s->stack_size;
@@ -135,106 +137,107 @@ static void	update_nodes(t_stack_status *s)
 		n->n_stats.in_which_tenth = (index * TENTHS) / s->stack_size;
 		n = n->previous;
 	}
-	get_off_by_position(s);
+	// get_outliers(s);
+	// get_off_by_position(s);
 }
 
 
 
 // static void	get_off_by_position(t_stack_status *s)
-void	get_outliers(t_stack_status *s)
-{
-	int 			i;
-	t_n				*cur;
-	t_node_stats	n_s;
+// void	get_outliers(t_stack_status *s)
+// {
+// 	int 			i;
+// 	t_n				*cur;
+// 	t_node_stats	n_s;
 
-	i = -1;
-	cur = *(s->or);
-	s->outliers_fwd = 0;
-	s->outliers_rev = 0;
-	if (s->stack_size > 80)
-		return ;
-	while (++i < s->stack_size)
-	{
-		n_s = cur->n_stats;
-		if (s->stack_size < 20)
-		{
-			if (n_s.in_which_quarter != n_s.belongs_in_quarter)
-				s->outliers_fwd++;
-			else if (n_s.in_which_tenth < n_s.belongs_in_tenth - 1
-				|| n_s.in_which_tenth > n_s.belongs_in_tenth + 1)
-				s->outliers_fwd++;
-			if (n_s.in_which_quarter != n_s.belongs_in_quarter_rev)
-				s->outliers_rev++;
-			else if (n_s.in_which_tenth < n_s.belongs_in_tenth_rev - 1
-				|| n_s.in_which_tenth > n_s.belongs_in_tenth_rev + 1)
-				s->outliers_rev++;
-		}
-		else if (s->stack_size <= 80)
-		{
-			if (n_s.in_which_tenth != n_s.belongs_in_tenth)
-			s->outliers_fwd++;
-		if (n_s.in_which_tenth != n_s.belongs_in_tenth_rev)
-				s->outliers_rev++;
-		}
-		cur = cur->previous;
-	}
-}
+// 	i = -1;
+// 	cur = *(s->or);
+// 	s->outliers_fwd = 0;
+// 	s->outliers_rev = 0;
+// 	if (s->stack_size > 80)
+// 		return ;
+// 	while (++i < s->stack_size)
+// 	{
+// 		n_s = cur->n_stats;
+// 		if (s->stack_size < 30)
+// 		{
+// 			if (n_s.in_which_quarter != n_s.belongs_in_quarter)
+// 				s->outliers_fwd++;
+// 			else if (n_s.in_which_tenth < n_s.belongs_in_tenth - 1
+// 				|| n_s.in_which_tenth > n_s.belongs_in_tenth + 1)
+// 				s->outliers_fwd++;
+// 			if (n_s.in_which_quarter != n_s.belongs_in_quarter_rev)
+// 				s->outliers_rev++;
+// 			else if (n_s.in_which_tenth < n_s.belongs_in_tenth_rev - 1
+// 				|| n_s.in_which_tenth > n_s.belongs_in_tenth_rev + 1)
+// 				s->outliers_rev++;
+// 		}
+// 		else if (s->stack_size <= 80)
+// 		{
+// 			if (n_s.in_which_tenth != n_s.belongs_in_tenth)
+// 			s->outliers_fwd++;
+// 		if (n_s.in_which_tenth != n_s.belongs_in_tenth_rev)
+// 				s->outliers_rev++;
+// 		}
+// 		cur = cur->previous;
+// 	}
+// }
 
 	
-static void	get_off_by_position(t_stack_status *s)
-{
-	int		i;
-	t_n		*cur;
+// static void	get_off_by_position(t_stack_status *s)
+// {
+// 	int		i;
+// 	t_n		*cur;
 
-	get_outliers(s);
+// 	get_outliers(s);
 
 
-	i = -1;
-	cur = *(s->or);
-	s->outliers_fwd = 0;
-	s->outliers_rev = 0;
-	while (++i < s->stack_size)
-	{
-		if ((i < s->stack_size - 1) && (cur->n_stats.relative_value - cur->previous->n_stats.relative_value >= -5)
-			&& (cur->n_stats.relative_value - cur->previous->n_stats.relative_value <= 3))
-			s->outliers_fwd++;
-		else if (i == s->stack_size - 1)
+// 	i = -1;
+// 	cur = *(s->or);
+// 	s->outliers_fwd = 0;
+// 	s->outliers_rev = 0;
+// 	while (++i < s->stack_size)
+// 	{
+// 		if ((i < s->stack_size - 1) && (cur->n_stats.relative_value - cur->previous->n_stats.relative_value >= -5)
+// 			&& (cur->n_stats.relative_value - cur->previous->n_stats.relative_value <= 3))
+// 			s->outliers_fwd++;
+// 		else if (i == s->stack_size - 1)
 
-		if ((i < s->stack_size - 1) && (cur->n_stats.relative_value_rev - cur->previous->n_stats.relative_value_rev >= -5)
-			&& (cur->n_stats.relative_value_rev - cur->previous->n_stats.relative_value_rev <= 3))
+// 		if ((i < s->stack_size - 1) && (cur->n_stats.relative_value_rev - cur->previous->n_stats.relative_value_rev >= -5)
+// 			&& (cur->n_stats.relative_value_rev - cur->previous->n_stats.relative_value_rev <= 3))
 			
 
-		cur->n_stats.off_by_rev = cur->n_stats.relative_value_rev - s->outliers_rev;
-		// cur->n_stats.off_by = cur->n_stats.relative_value - s->outliers_fwd;
-		// cur->n_stats.off_by_rev = cur->n_stats.relative_value_rev - s->outliers_rev;
-		if (abs(cur->n_stats.off_by) > 2)
-			s->outliers_fwd++;
-		if (abs(cur->n_stats.off_by_rev) > 2)
-			s->outliers_rev++;
-		cur = cur->previous;
-	}
-		// while (++i < s->stack_size)
-		// {
-		// 	cur->n_stats.off_by = cur->n_stats.relative_value - s->outliers_fwd;
-		// 	cur->n_stats.off_by_rev = cur->n_stats.relative_value_rev - s->outliers_rev;
-		// 	if (abs(cur->n_stats.off_by) > 2)
-		// 		s->outliers_fwd++;
-		// 	if (abs(cur->n_stats.off_by_rev) > 2)
-		// 		s->outliers_rev++;
-		// 	cur = cur->previous;
-		// }
+// 		cur->n_stats.off_by_rev = cur->n_stats.relative_value_rev - s->outliers_rev;
+// 		// cur->n_stats.off_by = cur->n_stats.relative_value - s->outliers_fwd;
+// 		// cur->n_stats.off_by_rev = cur->n_stats.relative_value_rev - s->outliers_rev;
+// 		if (abs(cur->n_stats.off_by) > 2)
+// 			s->outliers_fwd++;
+// 		if (abs(cur->n_stats.off_by_rev) > 2)
+// 			s->outliers_rev++;
+// 		cur = cur->previous;
+// 	}
+// 		// while (++i < s->stack_size)
+// 		// {
+// 		// 	cur->n_stats.off_by = cur->n_stats.relative_value - s->outliers_fwd;
+// 		// 	cur->n_stats.off_by_rev = cur->n_stats.relative_value_rev - s->outliers_rev;
+// 		// 	if (abs(cur->n_stats.off_by) > 2)
+// 		// 		s->outliers_fwd++;
+// 		// 	if (abs(cur->n_stats.off_by_rev) > 2)
+// 		// 		s->outliers_rev++;
+// 		// 	cur = cur->previous;
+// 		// }
 
 
 		
-	// real_index = -1;
-	// cur = *(s->or);
-	// while (++real_index < s->stack_size)
-	// {
-	// 	cur->n_stats.off_by -= s->outliers;
-	// 	cur->n_stats.off_by_rev -= s->outliers;
-	// 	cur = cur->previous;
-	// }
-}
+// 	// real_index = -1;
+// 	// cur = *(s->or);
+// 	// while (++real_index < s->stack_size)
+// 	// {
+// 	// 	cur->n_stats.off_by -= s->outliers;
+// 	// 	cur->n_stats.off_by_rev -= s->outliers;
+// 	// 	cur = cur->previous;
+// 	// }
+// }
 
 // static void	get_off_by_position(t_stack_status *s)
 // {

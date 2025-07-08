@@ -71,10 +71,10 @@ SORTING_ALGORITHMS = \
 	$(SORTING_ALGORITHMS_DIR)/3_two_three_elements_sorter.c \
 	$(SORTING_ALGORITHMS_DIR)/4_four_elements_sorter.c \
 	$(SORTING_ALGORITHMS_DIR)/5_five_elements_sorter.c \
-	$(SORTING_ALGORITHMS_DIR)/6_insertion_sort.c \
+	$(SORTING_ALGORITHMS_DIR)/6_two_off.c \
 	$(SORTING_ALGORITHMS_DIR)/7_reverse_sort.c \
 	$(SORTING_ALGORITHMS_DIR)/8_quick_sort.c \
-	$(SORTING_ALGORITHMS_DIR)/9_two_off.c \
+	$(SORTING_ALGORITHMS_DIR)/9_insertion_sort.c \
 	$(SORTING_ALGORITHMS_DIR)/10_bucket_sort.c \
 	$(SORTING_ALGORITHMS_DIR)/11_bucket_meta.c \
 	$(SORTING_ALGORITHMS_DIR)/12_bucket_distribution.c
