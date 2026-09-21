@@ -1,0 +1,23 @@
+# Object files
+*.o
+
+# Precompiled headers
+*.gch
+
+# Build directories
+build/
+obj/
+object_files/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile.cmake
+
+# Compiled executables
+a.out
+42/philos/philosophers
+
+# External library
+/2d_projects/solong/lib/MLX42/
