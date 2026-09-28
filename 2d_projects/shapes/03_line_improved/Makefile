@@ -1,4 +1,4 @@
-# Project = 02_line
+# Project = 03_line_improved
 NAME = draw_line
 
 # Directories
@@ -33,7 +33,7 @@ all: $(NAME)
 $(NAME): $(OBJ_FILES)
 	$(CC) $(OBJ_FILES) -o $(NAME) $(LDFLAGS) $(LDLIBS)
 
-# Note the pipe: order-only prerequisite
+# Note the |pipe: order-only prerequisite
 # changes to obj/ do not force recompilation
 $(OBJ_FILES): | $(DIR_OBJ)
 
@@ -42,12 +42,14 @@ $(DIR_OBJ):
 
 $(DIR_OBJ)/main.o: $(DIR_SRC)/main.c
 	$(CC) $(CFLAGS) -c $(DIR_SRC)/main.c -o $(DIR_OBJ)/main.o
-
 $(DIR_OBJ)/graphics.o: $(DIR_SRC)/graphics.c
 	$(CC) $(CFLAGS) -c $(DIR_SRC)/graphics.c -o $(DIR_OBJ)/graphics.o
-
 $(DIR_OBJ)/pixel.o: $(DIR_SRC)/pixel.c
 	$(CC) $(CFLAGS) -c $(DIR_SRC)/pixel.c -o $(DIR_OBJ)/pixel.o
+$(DIR_OBJ)/line.o: $(DIR_SRC)/line.c
+	$(CC) $(CFLAGS) -c $(DIR_SRC)/line.c -o $(DIR_OBJ)/line.o
+$(DIR_OBJ)/helper.o: $(DIR_SRC)/helper.c
+	$(CC) $(CFLAGS) -c $(DIR_SRC)/helper.c -o $(DIR_OBJ)/helper.o
 
 clean:
 	rm -f $(OBJ_FILES)
