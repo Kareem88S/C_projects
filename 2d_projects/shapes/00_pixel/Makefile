@@ -1,4 +1,3 @@
-# Project = 00_pixel
 NAME = learn_pixel
 
 # directories

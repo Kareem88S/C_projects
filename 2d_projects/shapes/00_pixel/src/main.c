@@ -1,6 +1,5 @@
 /*
 
-00_pixel/
 main.c
 
 */

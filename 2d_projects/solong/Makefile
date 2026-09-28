@@ -19,9 +19,9 @@ DIR_MENU = $(DIR_SCENES)/menu
 CC = gcc
 INCLUDES = -I $(DIR_HEADER_FILES) -I $(DIR_MLX42)/include
 DEBUG_FLAG = -g3
-CFLAGS = -Wall -Wextra -Werror $(INCLUDES) $(DEBUG_FLAG)
+CFLAGS = -Wall -Wextra -Werror -Wunreachable-code $(INCLUDES) $(DEBUG_FLAG) 
 # Linker flags for MLX42
-LDFLAGS = -L$(DIR_MLX42)/build -lmlx42 -ldl -lglfw -pthread -lm
+LDFLAGS = -L$(DIR_MLX42)/build -lmlx42 -ldl -lglfw -pthread -lm -Ofast
 
 # source files
 ROOT_SOURCES = $(DIR_SRC)/main.c
